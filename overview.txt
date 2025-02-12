@@ -1,0 +1,6 @@
+This is the main project context:
+
+I'm working on a tool called UniverSQL that allows you to run Snowflake SQL on Snowflake iceberg tables without ETL.
+We've got it working so that it works with Snowflake Iceberg tables and stages.
+I am looking to run a TPC-DI benchmark study on Snowflake and through UniverSQL to see how it compares.
+I'm looking for help generating the queries for this.
