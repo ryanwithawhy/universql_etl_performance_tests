@@ -510,7 +510,7 @@ class BronzeLayerManager:
         return ddls
 
     def load_staging_data(self, s3_base_url: str, aws_key_id: str, 
-                         aws_secret_key: str, batch_num: int, historical = False) -> list[str]:
+                         aws_secret_key: str, batch_num: int, historical: bool = False) -> list[str]:
         """
         Loads TPC-DI data from S3 into Snowflake staging tables for a specified batch.
         

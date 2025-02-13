@@ -22,7 +22,7 @@ class TPCDIManager:
         self.db = DatabaseManager(None)  # Add connection
         self.env_setup = EnvironmentSetup()
         self.bronze = BronzeLayerManager(self.external_volume, self.base_location)
-        self.silver = SilverLayerManager()
+        self.silver = SilverLayerManager(self.external_volume, self.base_location)
         self.gold = GoldLayerManager(self.external_volume, self.base_location)
     
         self.conn_manager = ConnectionManager("snowflake")
@@ -52,13 +52,14 @@ class TPCDIManager:
         if batch_num == 1:
             historical = True
         queries.extend(self.bronze.load_staging_data(self.s3_uri, self.aws_access_key, self.aws_secret_key, batch_num, historical))
+        queries.extend(self.silver.transform_staged_data())
         self.db.execute_queries(queries)
   
 def main():
     manager = TPCDIManager()
     manager.setup_env()
     manager.create_tables()
-    for batch in (1,2):
+    for batch in [1]:
         manager.execute_batch(batch)
 
 if __name__ == "__main__":
