@@ -41,6 +41,13 @@ class EnvironmentSetup:
             RECORD_DELIMITER = '\n';
         """)
         
+        file_format_ddls.append("""
+        CREATE OR REPLACE FILE FORMAT TPC_DI.STAGING.JSON
+            TYPE = 'JSON'
+            STRIP_OUTER_ARRAY = TRUE
+            ALLOW_DUPLICATE = FALSE;
+        """)
+        
         return file_format_ddls
 
 

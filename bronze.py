@@ -161,7 +161,29 @@ class BronzeLayerManager:
         # CustomerMgmt staging table (XML format)
         ddls.append(f"""
         CREATE OR REPLACE ICEBERG TABLE TPC_DI.STAGING.CUSTOMERMGMT (
-            xml_content OBJECT
+            ActionTS TIMESTAMP,
+            ActionType STRING,
+            C_ID NUMBER(11,0),
+            C_TAX_ID STRING,
+            C_GNDR STRING,
+            C_TIER NUMBER(1,0),
+            C_DOB DATE,
+            C_L_NAME STRING,
+            C_F_NAME STRING,
+            C_M_NAME STRING,
+            C_ADLINE1 STRING,
+            C_ADLINE2 STRING,
+            C_ZIPCODE STRING,
+            C_CITY STRING,
+            C_STATE_PROV STRING,
+            C_CTRY STRING,
+            C_PRIM_EMAIL STRING,
+            C_ALT_EMAIL STRING,
+            C_PHONE_1 STRING,
+            C_PHONE_2 STRING,
+            C_PHONE_3 STRING,
+            C_LCL_TX_ID STRING,
+            C_NAT_TX_ID STRING
         )
         EXTERNAL_VOLUME = '{self.external_volume}'
         CATALOG = 'SNOWFLAKE'
@@ -564,14 +586,22 @@ class BronzeLayerManager:
                 {credentials}
             """,
             
+            # 'CustomerMgmt': f"""
+            #     COPY INTO TPC_DI.STAGING.CUSTOMERMGMT
+            #     FROM '{batch_path}/CustomerMgmt.xml'
+            #     FILE_FORMAT = (
+            #         TYPE = 'XML'
+            #     )
+            #     {credentials}
+            # """,
+            
             'CustomerMgmt': f"""
                 COPY INTO TPC_DI.STAGING.CUSTOMERMGMT
-                FROM '{batch_path}/CustomerMgmt.xml'
-                FILE_FORMAT = (
-                    TYPE = 'XML'
-                )
+                FROM '{batch_path}/CustomerMgmt.json'
+                FILE_FORMAT = TPC_DI.STAGING.JSON
+                MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
                 {credentials}
-            """,
+            """,            
             
             'DailyMarket': f"""
                 COPY INTO TPC_DI.{cdc_table_schema}.DAILYMARKET
